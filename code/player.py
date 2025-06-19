@@ -142,7 +142,9 @@ class Player(pygame.sprite.Sprite):
     def move(self, deltatime):
         if self.timers['knockback'].active:
             self.hitbox_rect.x += self.knockback.x * deltatime
+            self.collision('horizontal')
             self.hitbox_rect.y += self.knockback.y * deltatime
+            self.collision('vertical')
         else:
             # горизантальное
             self.hitbox_rect.x += self.direction.x * self.speed * deltatime
@@ -173,6 +175,7 @@ class Player(pygame.sprite.Sprite):
                         # чтобы анимация начиналась сначала
                         self.frame_index = 0
                     self.jump = False
+
         self.rect.center = self.hitbox_rect.center
 
     def climbing(self):

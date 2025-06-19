@@ -30,32 +30,31 @@ class Level:
         self.bullet_frames = level_frames['bullet']
 
     def setup(self, tmx_map, level_frames):
-        # задний фон
-        backgrounds = level_frames['background']
-        for index, background in enumerate(backgrounds):
-            background_size = background.get_size()
-            scale_factor = self.level_height / background_size[1]
+        for index, background in enumerate(level_frames['background']):
+            background_width, background_height = background.get_size()
+            if index == 0:
+                scale_factor = self.level_height / background_height
+                background = pygame.transform.scale_by(background, scale_factor)
 
-            background = pygame.transform.scale_by(background, scale_factor)
-            background_new_size = background.get_size()
+            else:
+                scale_factor = self.level_height / background_height
+                scale_factor *= BUILDING_BG_SCALE_FACTOR
+                background = pygame.transform.scale_by(background, scale_factor)
 
-            for x in range(0, self.level_width, background_new_size[0]):
-                y = 0
-                parallax_factor = 0
-
+            for x in range(0, self.level_width, background_width):
                 if index == 0:
-                    parallax_factor = 0.3
-                elif index == 1:
+                    pos = (x, 0)
+                else:
+                    pos = (x, self.level_height)
+                groups = self.all_sprites
+                z = Z_LAYERS[f'BG_layer_{index}']
+                if index == 0:
                     parallax_factor = 0.5
-                elif index == 2:
+                elif index == 1:
                     parallax_factor = 0.7
-
-                BackgroundSprite((x, y),
-                                 background,
-                                 self.all_sprites,
-                                 z=Z_LAYERS[f'BG_layer_{index}'],
-                                 parallax_factor=parallax_factor
-                                 )
+                elif index == 2:
+                    parallax_factor = 0.9
+                BackgroundSprite(pos, background, groups, z=z, parallax_factor=parallax_factor)
 
         # тайлы
         for layer in ['BG_collision', 'BG_uncollision', 'Ladder']:
