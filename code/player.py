@@ -173,7 +173,6 @@ class Player(pygame.sprite.Sprite):
                         # чтобы анимация начиналась сначала
                         self.frame_index = 0
                     self.jump = False
-                print(3)
         self.rect.center = self.hitbox_rect.center
 
     def climbing(self):

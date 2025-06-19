@@ -28,10 +28,10 @@ class Game:
             'player' : import_sub_folders('../graphics/warped city files/SPRITES/player'),
             'bullet': import_sub_folders('../graphics/warped city files/SPRITES/misc/bullet'),
 
+            'background': import_folder('../graphics/warped city files/ENVIRONMENT/background'),
+            'enemy-explosion': import_folder('../graphics/warped city files/SPRITES/misc/enemy-explosion'),
             'drone' : import_folder('../graphics/warped city files/SPRITES/misc/drone'),
             'turret' : import_folder('../graphics/warped city files/SPRITES/misc/turret'),
-            'enemy-explosion' : import_folder('../graphics/warped city files/SPRITES/misc/enemy-explosion'),
-
 
             'antenna' : import_image('../graphics/warped city files/ENVIRONMENT/props/antenna.png'),
             'banner-arrow' : import_image('../graphics/warped city files/ENVIRONMENT/props/banner-arrow.png'),
@@ -40,7 +40,6 @@ class Game:
             'banner-open' : import_image('../graphics/warped city files/ENVIRONMENT/props/banner-open.png'),
             'banners.png' : import_image('../graphics/warped city files/ENVIRONMENT/props/banners.png'),
             'banner-small' : import_image('../graphics/warped city files/ENVIRONMENT/props/banner-small.png')
-
         }
 
     def run(self):

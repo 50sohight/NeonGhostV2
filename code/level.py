@@ -7,10 +7,16 @@ from player import Player
 from groups import AllSprites
 from enemies import Drone, Turret
 from bullet import Bullet
+from background import BackgroundSprite
+from random import random
 
 class Level:
     def __init__(self, tmx_map, level_frames, logic_surface):
         self.logic_surface = logic_surface
+
+        # ограничение уровня
+        self.level_height = tmx_map.height * TILE_SIZE
+        self.level_width = tmx_map.width * TILE_SIZE
 
         # группы
         self.all_sprites = AllSprites()
@@ -24,6 +30,33 @@ class Level:
         self.bullet_frames = level_frames['bullet']
 
     def setup(self, tmx_map, level_frames):
+        # задний фон
+        backgrounds = level_frames['background']
+        for index, background in enumerate(backgrounds):
+            background_size = background.get_size()
+            scale_factor = self.level_height / background_size[1]
+
+            background = pygame.transform.scale_by(background, scale_factor)
+            background_new_size = background.get_size()
+
+            for x in range(0, self.level_width, background_new_size[0]):
+                y = 0
+                parallax_factor = 0
+
+                if index == 0:
+                    parallax_factor = 0.3
+                elif index == 1:
+                    parallax_factor = 0.5
+                elif index == 2:
+                    parallax_factor = 0.7
+
+                BackgroundSprite((x, y),
+                                 background,
+                                 self.all_sprites,
+                                 z=Z_LAYERS[f'BG_layer_{index}'],
+                                 parallax_factor=parallax_factor
+                                 )
+
         # тайлы
         for layer in ['BG_collision', 'BG_uncollision', 'Ladder']:
             for x, y, surf in tmx_map.get_layer_by_name(layer).tiles():
@@ -36,7 +69,7 @@ class Level:
                     groups.append(self.ladder_sprites)
 
                 pos = (x * TILE_SIZE,y * TILE_SIZE)
-                z = Z_LAYERS['BG']
+                z = Z_LAYERS['BG_tiles']
 
                 Sprite(pos, surf, groups, z)
 
@@ -102,8 +135,13 @@ class Level:
                     bullet.dye = True
                     enemy.dye = True
 
+    def check_constaint(self):
+        if self.player.hitbox_rect.bottom > self.level_height:
+            print('death')
+
     def run(self, deltatime):
         self.all_sprites.update(deltatime)
         self.bullet_collision()
+        self.check_constaint()
         self.logic_surface.fill('black')
-        self.all_sprites.draw(self.logic_surface, self.player.hitbox_rect.center)
+        self.all_sprites.draw(self.logic_surface, self.player.hitbox_rect.center, self.level_width, self.level_height)
