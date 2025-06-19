@@ -19,8 +19,7 @@ MAX_GRAVITY_VALUE = 3300
 # layers
 Z_LAYERS = {
     'None' : -1,
-    'BG_collision' : 0,
-    'BG_uncollision' : 1,
-    'Objects' : 2,
-    'Main' : 3
+    'BG' : 0,
+    'Objects' : 1,
+    'Main' : 2
 }
